@@ -43,12 +43,7 @@ const routes = [
         meta: {
           role: 'admin'
         }
-      },{
-  path: '/mis-peliculas',
-  name: 'mis-peliculas',
-  component: () =>
-    import('../views/MisPeliculas.vue')
-}
+      }
     ]
   },
 
@@ -61,6 +56,12 @@ const routes = [
     }
   },
 
+  {
+  path: '/mis-peliculas',
+  name: 'mis-peliculas',
+  component: () =>
+    import('../views/MisPeliculas.vue')
+},
   {
     path: '/peliculas',
     name: 'peliculas',

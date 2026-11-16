@@ -69,69 +69,116 @@ onMounted(() => {
   cargarResenias()
 })
 </script>
-
 <template>
 
   <v-container>
 
-    <h1>
-      Moderación de reseñas
-    </h1>
+    <div class="text-center mb-8">
 
-    <v-table>
+      <h1 class="text-h3 mb-3">
+        📝 Moderación de reseñas
+      </h1>
 
-      <thead>
+      <p class="text-medium-emphasis">
+        Gestiona y supervisa las reseñas publicadas por los usuarios.
+      </p>
 
-        <tr>
-          <th>Usuario</th>
-          <th>Película</th>
-          <th>Rating</th>
-          <th>Comentario</th>
-          <th></th>
-        </tr>
+    </div>
 
-      </thead>
+    <v-card elevation="6">
 
-      <tbody>
+      <v-table>
 
-        <tr
-          v-for="resenia in resenias"
-          :key="resenia.id"
-        >
+        <thead>
 
-          <td>
-       {{ resenia.profile?.email }}
-          </td>
+          <tr>
 
-          <td>
-            {{ resenia.peliculas?.titulo }}
-          </td>
+            <th>Usuario</th>
+            <th>Película</th>
+            <th>Rating</th>
+            <th>Comentario</th>
+            <th>Acciones</th>
 
-          <td>
-            {{ resenia.rating }}
-          </td>
+          </tr>
 
-          <td>
-            {{ resenia.comentario }}
-          </td>
-          <td>
+        </thead>
 
-            <v-btn
-              color="error"
-              size="small"
-              @click="eliminarResenia(resenia.id)"
-            >
-              Eliminar
-            </v-btn>
+        <tbody>
 
-          </td>
+          <tr
+            v-for="resenia in resenias"
+            :key="resenia.id"
+          >
 
-        </tr>
+            <td>
 
-      </tbody>
+              <div class="d-flex align-center">
 
-    </v-table>
+                👤
+
+                <span class="ml-2">
+                  {{ resenia.emailUsuario }}
+                </span>
+
+              </div>
+
+            </td>
+
+            <td>
+
+              🎬
+              {{ resenia.peliculas?.titulo }}
+
+            </td>
+
+            <td>
+
+              <v-chip
+                color="amber"
+              >
+                ⭐ {{ resenia.rating }}/5
+              </v-chip>
+
+            </td>
+
+            <td>
+
+              {{ resenia.comentario }}
+
+            </td>
+
+            <td>
+
+              <v-btn
+                color="error"
+                size="small"
+                @click="
+                  eliminarResenia(
+                    resenia.id
+                  )
+                "
+              >
+                Eliminar
+              </v-btn>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </v-table>
+
+    </v-card>
 
   </v-container>
 
+
 </template>
+  <style scoped>
+
+.v-card {
+  border-radius: 12px;
+}
+
+</style>

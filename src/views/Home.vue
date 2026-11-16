@@ -21,13 +21,17 @@ function irRegistro() {
 function irPeliculas() {
   router.push('/peliculas')
 }
+
+function irMisPeliculas() {
+  router.push('/mis-peliculas')
+}
 </script>
 
 <template>
 
   <v-container
     fluid
-    class="home-container"
+    class="hero"
   >
 
     <v-row
@@ -42,73 +46,181 @@ function irPeliculas() {
         lg="6"
       >
 
-        <v-card
-          class="pa-8 text-center"
-          elevation="8"
-        >
+        <div class="text-center">
 
-          <h1 class="text-h3 mb-4">
-            Reseñas de Películas
+          <h1 class="titulo">
+            🎬 Reseñas de Películas
           </h1>
 
-          <p class="text-h6 mb-6">
-            Descubre películas, consulta opiniones
-            y comparte tus propias reseñas.
+          <p class="subtitulo">
+            Descubre películas, comparte opiniones
+            y consulta valoraciones de otros usuarios.
           </p>
 
-         <div
-  v-if="!estaLogueado"
-  class="d-flex justify-center ga-4"
->
+          <div
+            v-if="!estaLogueado"
+            class="botones"
+          >
 
-  <v-btn
-    color="primary"
-    size="large"
-    @click="irLogin"
-  >
-    Iniciar sesión
-  </v-btn>
+            <v-btn
+              color="primary"
+              size="large"
+              @click="irLogin"
+            >
+              Iniciar sesión
+            </v-btn>
 
-  <v-btn
-    color="success"
-    size="large"
-    @click="irRegistro"
-  >
-    Registrarse
-  </v-btn>
+            <v-btn
+              color="success"
+              size="large"
+              @click="irRegistro"
+            >
+              Registrarse
+            </v-btn>
 
-</div>
+          </div>
 
-<div
-  v-else
-  class="d-flex justify-center"
->
+          <div
+            v-else
+            class="botones"
+          >
 
-  <v-btn
-    color="primary"
-    size="large"
-    @click="irPeliculas"
-  >
-    Ir a películas
-  </v-btn>
+            <v-btn
+              color="primary"
+              size="large"
+              @click="irPeliculas"
+            >
+              Explorar películas
+            </v-btn>
 
-</div>
+            <v-btn
+              color="secondary"
+              size="large"
+              @click="irMisPeliculas"
+            >
+              Mis películas
+            </v-btn>
 
-        </v-card>
+          </div>
+
+        </div>
 
       </v-col>
 
     </v-row>
 
   </v-container>
+<v-container class="mt-12">
 
+  <v-row>
+
+    <v-col
+      cols="12"
+      md="4"
+    >
+
+      <v-card
+        elevation="4"
+        class="pa-6 text-center"
+      >
+
+        <div class="text-h3">
+          🎬
+        </div>
+
+        <div class="text-h5 mt-2">
+          Películas
+        </div>
+
+        <div class="text-medium-emphasis">
+          Busca y descubre películas.
+        </div>
+
+      </v-card>
+
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="4"
+    >
+
+      <v-card
+        elevation="4"
+        class="pa-6 text-center"
+      >
+
+        <div class="text-h3">
+          ⭐
+        </div>
+
+        <div class="text-h5 mt-2">
+          Reseñas
+        </div>
+
+        <div class="text-medium-emphasis">
+          Comparte tu opinión con otros usuarios.
+        </div>
+
+      </v-card>
+
+    </v-col>
+
+    <v-col
+      cols="12"
+      md="4"
+    >
+
+      <v-card
+        elevation="4"
+        class="pa-6 text-center"
+      >
+
+        <div class="text-h3">
+          👥
+        </div>
+
+        <div class="text-h5 mt-2">
+          Comunidad
+        </div>
+
+        <div class="text-medium-emphasis">
+          Consulta valoraciones reales.
+        </div>
+
+      </v-card>
+
+    </v-col>
+
+  </v-row>
+
+</v-container>
 </template>
 
 <style scoped>
 
-.home-container {
-  min-height: 100vh;
-  background: #f5f5f5;
+.hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.titulo {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.subtitulo {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.botones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 </style>

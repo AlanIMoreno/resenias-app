@@ -60,75 +60,130 @@ onMounted(() => {
   cargarIndicadores()
 })
 </script>
-
 <template>
 
   <v-container>
 
-    <h1>
-      Indicadores
-    </h1>
+    <div class="text-center mb-8">
+
+      <h1 class="text-h3 mb-3">
+        📊 Dashboard
+      </h1>
+
+      <p class="text-medium-emphasis">
+        Resumen general de la plataforma.
+      </p>
+
+    </div>
 
     <v-row>
 
       <v-col
         cols="12"
+        sm="6"
         md="3"
       >
-        <v-card>
-          <v-card-title>
-            Usuarios
-          </v-card-title>
 
-          <v-card-text>
+        <v-card
+          elevation="6"
+          class="text-center pa-4"
+        >
+
+          <div class="text-h2 mb-2">
+            👥
+          </div>
+
+          <div class="text-h5">
             {{ totalUsuarios }}
-          </v-card-text>
+          </div>
+
+          <div>
+            Usuarios
+          </div>
+
         </v-card>
+
       </v-col>
 
       <v-col
         cols="12"
+        sm="6"
         md="3"
       >
-        <v-card>
-          <v-card-title>
-            Películas
-          </v-card-title>
 
-          <v-card-text>
+        <v-card
+          elevation="6"
+          class="text-center pa-4"
+        >
+
+          <div class="text-h2 mb-2">
+            🎬
+          </div>
+
+          <div class="text-h5">
             {{ totalPeliculas }}
-          </v-card-text>
+          </div>
+
+          <div>
+            Películas
+          </div>
+
         </v-card>
+
       </v-col>
 
       <v-col
         cols="12"
+        sm="6"
         md="3"
       >
-        <v-card>
-          <v-card-title>
-            Reseñas
-          </v-card-title>
 
-          <v-card-text>
+        <v-card
+          elevation="6"
+          class="text-center pa-4"
+        >
+
+          <div class="text-h2 mb-2">
+            ⭐
+          </div>
+
+          <div class="text-h5">
             {{ totalResenias }}
-          </v-card-text>
+          </div>
+
+          <div>
+            Reseñas
+          </div>
+
         </v-card>
+
       </v-col>
 
       <v-col
         cols="12"
+        sm="6"
         md="3"
       >
-        <v-card>
-          <v-card-title>
-            Administradores
-          </v-card-title>
 
-          <v-card-text>
+        <v-card
+          elevation="6"
+          class="text-center pa-4"
+        >
+
+          <div class="text-h2 mb-2">
+            🛡️
+          </div>
+
+          <div class="text-h5">
             {{ totalAdmins }}
-          </v-card-text>
+          </div>
+
+          <div>
+            Admins
+          </div>
+
         </v-card>
+
       </v-col>
 
     </v-row>
@@ -136,3 +191,14 @@ onMounted(() => {
   </v-container>
 
 </template>
+<style scoped>
+
+.v-card {
+  transition: 0.3s;
+}
+
+.v-card:hover {
+  transform: translateY(-5px);
+}
+
+</style>

@@ -49,14 +49,21 @@ onMounted(() => {
   cargarMisPeliculas()
 })
 </script>
-
 <template>
 
   <v-container>
 
-    <h1>
-      Mis películas
-    </h1>
+    <div class="text-center mb-8">
+
+      <h1 class="text-h3 mb-3">
+        🎞 Mis películas
+      </h1>
+
+      <p class="text-medium-emphasis">
+        Películas que has reseñado y que puedes volver a consultar o modificar.
+      </p>
+
+    </div>
 
     <v-row>
 
@@ -64,11 +71,14 @@ onMounted(() => {
         v-for="item in peliculas"
         :key="item.peliculas.id"
         cols="12"
+        sm="6"
         md="4"
+        lg="3"
       >
 
         <v-card
-          class="cursor-pointer"
+          class="movie-card"
+          elevation="6"
           @click="
             abrirPelicula(
               item.peliculas.tmdb_id
@@ -78,17 +88,38 @@ onMounted(() => {
 
           <v-img
             :src="`https://image.tmdb.org/t/p/w500${item.peliculas.poster}`"
-            height="350"
+            height="400"
             cover
           />
 
-          <v-card-title>
+          <v-card-title
+            class="text-wrap"
+          >
             {{ item.peliculas.titulo }}
           </v-card-title>
 
           <v-card-text>
-            ⭐ {{ item.rating }}/5
+
+            <div class="mb-2">
+              Tu puntuación:
+            </div>
+
+            <div class="text-h6">
+              ⭐ {{ item.rating }}/5
+            </div>
+
           </v-card-text>
+
+          <v-card-actions>
+
+            <v-btn
+              block
+              color="primary"
+            >
+              Ver detalle
+            </v-btn>
+
+          </v-card-actions>
 
         </v-card>
 
@@ -99,3 +130,16 @@ onMounted(() => {
   </v-container>
 
 </template>
+<style scoped>
+
+.movie-card {
+  cursor: pointer;
+  transition: 0.3s;
+  height: 100%;
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+}
+
+</style>

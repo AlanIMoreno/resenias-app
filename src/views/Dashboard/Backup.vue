@@ -54,78 +54,120 @@ onMounted(() => {
   cargarUsuarios()
 })
 </script>
-
 <template>
 
   <v-container>
 
-    <h1>
-      Administración de usuarios
-    </h1>
+    <div class="text-center mb-8">
 
-    <v-table>
+      <h1 class="text-h3 mb-3">
+        👥 Gestión de usuarios
+      </h1>
 
-      <thead>
+      <p class="text-medium-emphasis">
+        Administración de roles y permisos de usuarios.
+      </p>
 
-        <tr>
+    </div>
 
-          <th>Email</th>
-          <th>Rol</th>
-          <th></th>
+    <v-card elevation="6">
 
-        </tr>
+      <v-table>
 
-      </thead>
+        <thead>
 
-      <tbody>
+          <tr>
 
-        <tr
-          v-for="usuario in usuarios"
-          :key="usuario.id"
-        >
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
 
-          <td>
-            {{ usuario.email }}
-          </td>
+          </tr>
 
-          <td>
-            {{ usuario.rol }}
-          </td>
+        </thead>
 
-          <td>
+        <tbody>
 
-            <v-btn
-              v-if="usuario.rol === 'user'"
-              color="primary"
-              size="small"
-              @click="cambiarRol(
-                usuario.id,
-                'admin'
-              )"
-            >
-              Hacer admin
-            </v-btn>
+          <tr
+            v-for="usuario in usuarios"
+            :key="usuario.id"
+          >
 
-            <v-btn
-              v-if="usuario.rol === 'admin'"
-              color="warning"
-              size="small"
-              @click="cambiarRol(
-                usuario.id,
-                'user'
-              )"
-            >
-              Quitar admin
-            </v-btn>
+            <td>
 
-          </td>
+              <div class="d-flex align-center">
 
-        </tr>
+                👤
 
-      </tbody>
+                <span class="ml-2">
+                  {{ usuario.email }}
+                </span>
 
-    </v-table>
+              </div>
+
+            </td>
+
+            <td>
+
+              <v-chip
+                :color="
+                  usuario.rol === 'admin'
+                    ? 'purple'
+                    : 'green'
+                "
+              >
+                {{ usuario.rol }}
+              </v-chip>
+
+            </td>
+
+            <td>
+
+              <v-btn
+                v-if="usuario.rol === 'user'"
+                color="primary"
+                size="small"
+                @click="
+                  cambiarRol(
+                    usuario.id,
+                    'admin'
+                  )
+                "
+              >
+                Hacer admin
+              </v-btn>
+
+              <v-btn
+                v-if="usuario.rol === 'admin'"
+                color="warning"
+                size="small"
+                @click="
+                  cambiarRol(
+                    usuario.id,
+                    'user'
+                  )
+                "
+              >
+                Quitar admin
+              </v-btn>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </v-table>
+
+    </v-card>
 
   </v-container>
 
 </template>
+<style scoped>
+
+.v-card {
+  border-radius: 12px;
+}
+
+</style>

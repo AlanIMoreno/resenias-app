@@ -295,104 +295,131 @@ await cargarResenias()
 
       </v-col>
 
-      <v-col cols="12" md="8">
+<v-col cols="12" md="8">
 
-        <h1>
-          {{ pelicula.title }}
-        </h1>
+  <div class="mb-6">
 
-        <p>
-          {{ pelicula.release_date }}
-        </p>
+    <h1 class="text-h3 mb-2">
+      {{ pelicula.title }}
+    </h1>
 
-        <p>
-          {{ pelicula.overview }}
-        </p>
+    <div class="text-medium-emphasis mb-2">
+      📅 {{ pelicula.release_date }}
+    </div>
 
-        <p>
-          Rating TMDb:
-          {{ pelicula.vote_average }}
-        </p>
+    <div class="mb-2">
+      ⭐ TMDb:
+      {{ pelicula.vote_average }}
+    </div>
 
-<p>
-  ⭐ Usuarios:
-  {{ promedioUsuarios }}
-</p>
+    <div>
+      👥 Usuarios:
+      {{ promedioUsuarios }}
+      ({{ resenias.length }} reseñas)
+    </div>
 
-<p>
-  ({{ resenias.length }} reseñas)
-</p>
-<v-divider class="my-4" />
+  </div>
 
-<h2>
-  Tu reseña
-</h2>
+  <v-card
+    class="pa-4 mb-6"
+    elevation="4"
+  >
 
-<v-select
-  v-model="rating"
-  :items="[1,2,3,4,5]"
-  label="Puntuación"
-/>
+    <h2 class="mb-4">
+      Tu reseña
+    </h2>
 
-<v-textarea
-  v-model="comentario"
-  label="Comentario"
-/>
+    <v-select
+      v-model="rating"
+      :items="[1,2,3,4,5]"
+      label="Puntuación"
+      variant="outlined"
+    />
 
-<v-btn
-  color="success"
-  @click="guardarResenia"
->
-  Guardar reseña
-</v-btn>
-<v-divider class="my-6" />
+    <v-textarea
+      v-model="comentario"
+      label="Comentario"
+      variant="outlined"
+    />
 
-<h2>
-  Reseñas
-</h2>
+    <v-btn
+      color="success"
+      @click="guardarResenia"
+    >
+      Guardar reseña
+    </v-btn>
 
-<v-card
-  v-for="resenia in resenias"
-  :key="resenia.id"
-  class="mb-4"
->
-  <v-card-text>
+  </v-card>
 
-<strong>
-  {{ resenia.emailUsuario }}
-  ⭐ {{ resenia.rating }}/5
-</strong>
+  <h2 class="mb-4">
+    Reseñas de usuarios
+  </h2>
 
-    <p class="mt-2">
-      {{ resenia.comentario }}
-    </p>
+  <v-card
+    v-for="resenia in resenias"
+    :key="resenia.id"
+    class="mb-4"
+    elevation="3"
+  >
 
-<small>
-  {{ formatearFecha(resenia.fecha) }}
-</small>
- <br>
-<v-btn
-  v-if="authStore.user && resenia.usuario_id === authStore.user.id"
-  color="warning"
-  size="small"
-  class="mt-2 mr-2"
-  @click="editarResenia(resenia)"
->
-  Editar
-</v-btn>
-<br>
-<v-btn
-  v-if="authStore.user && resenia.usuario_id === authStore.user.id"
-  color="error"
-  size="small"
-  class="mt-2"
-  @click="eliminarResenia(resenia.id)"
->
-  Eliminar
-</v-btn>
-  </v-card-text>
-</v-card>
-      </v-col>
+    <v-card-text>
+
+      <div class="mb-2">
+
+        <strong>
+          {{ resenia.emailUsuario }}
+        </strong>
+
+      </div>
+
+      <div class="mb-2">
+
+        ⭐ {{ resenia.rating }}/5
+
+      </div>
+
+      <p>
+        {{ resenia.comentario }}
+      </p>
+
+      <small>
+        {{ formatearFecha(resenia.fecha) }}
+      </small>
+
+      <div class="mt-3">
+
+        <v-btn
+          v-if="
+          authStore.user &&
+          resenia.usuario_id === authStore.user.id
+          "
+          color="warning"
+          size="small"
+          class="mr-2"
+          @click="editarResenia(resenia)"
+        >
+          Editar
+        </v-btn>
+
+        <v-btn
+          v-if="
+          authStore.user &&
+          resenia.usuario_id === authStore.user.id
+          "
+          color="error"
+          size="small"
+          @click="eliminarResenia(resenia.id)"
+        >
+          Eliminar
+        </v-btn>
+
+      </div>
+
+    </v-card-text>
+
+  </v-card>
+
+</v-col>
 
     </v-row>
 

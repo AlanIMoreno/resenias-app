@@ -1,13 +1,10 @@
 <script setup>
-
 import { ref } from 'vue'
-
 import { useRouter } from 'vue-router'
-
 import { useAuth } from '../composables/useAuth'
-
 import { useAuthStore } from '../stores/auth'
 import { supabase } from '../lib/supabase'
+
 const router = useRouter()
 
 const authStore = useAuthStore()
@@ -15,7 +12,6 @@ const authStore = useAuthStore()
 const { login } = useAuth()
 
 const email = ref('')
-
 const password = ref('')
 
 async function ingresar() {
@@ -36,56 +32,126 @@ async function ingresar() {
 
   }
 
-authStore.setSession(
-  data.session
-)
+  authStore.setSession(
+    data.session
+  )
 
-const { data: profile } =
-  await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', data.user.id)
-    .single()
+  const { data: profile } =
+    await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
 
-authStore.setProfile(profile)
+  authStore.setProfile(profile)
 
-if (profile?.rol === 'admin') {
+  if (profile?.rol === 'admin') {
 
-  router.push('/dashboard/indicators')
+    router.push('/dashboard/indicators')
 
-} else {
+  } else {
 
-  router.push('/peliculas')
+    router.push('/')
 
+  }
 
-}}
-
+}
 </script>
 
 <template>
 
-  <v-container>
+  <v-container
+    fluid
+    class="login-container"
+  >
 
-    <h1>Login</h1>
-
-    <v-text-field
-      v-model="email"
-      label="Email"
-    />
-
-    <v-text-field
-      v-model="password"
-      label="Password"
-      type="password"
-    />
-
-    <v-btn
-      color="primary"
-      @click="ingresar"
+    <v-row
+      justify="center"
+      align="center"
+      class="fill-height"
     >
-      Ingresar
-    </v-btn>
+
+      <v-col
+        cols="12"
+        sm="8"
+        md="6"
+        lg="4"
+      >
+
+        <v-card
+          elevation="10"
+          class="pa-8"
+        >
+
+          <div class="text-center mb-6">
+
+            <h1 class="text-h4 mb-2">
+              🔐 Iniciar sesión
+            </h1>
+
+            <p class="text-medium-emphasis">
+              Accede para gestionar tus reseñas de películas.
+            </p>
+
+          </div>
+
+          <v-text-field
+            v-model="email"
+            label="Correo electrónico"
+            prepend-inner-icon="mdi-email"
+            variant="outlined"
+          />
+
+          <v-text-field
+            v-model="password"
+            label="Contraseña"
+            type="password"
+            prepend-inner-icon="mdi-lock"
+            variant="outlined"
+          />
+
+          <v-btn
+            block
+            color="primary"
+            size="large"
+            class="mt-2"
+            @click="ingresar"
+          >
+            Ingresar
+          </v-btn>
+
+          <div class="text-center mt-6">
+
+            <span>
+              ¿No tienes cuenta?
+            </span>
+
+            <br>
+
+            <v-btn
+              variant="text"
+              color="success"
+              to="/register"
+            >
+              Registrarse
+            </v-btn>
+
+          </div>
+
+        </v-card>
+
+      </v-col>
+
+    </v-row>
 
   </v-container>
 
 </template>
+
+<style scoped>
+
+.login-container {
+  min-height: 85vh;
+}
+
+</style>

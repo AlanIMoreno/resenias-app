@@ -48,74 +48,89 @@ async function logout() {
 </script>
 
 <template>
-  <div>
 
-  <div
-  style="
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:20px;
-  "
->
+  <v-app>
 
-  <h1>
-    Reseñas App
-  </h1>
+    <v-app-bar
+      color="indigo-darken-2"
+      density="comfortable"
+      elevation="4"
+    >
 
-  <div
-    style="
-      display:flex;
-      gap:10px;
-    "
-  ><div
-  v-if="!estaEnDashboard"
-  style="
-    display:flex;
-    gap:10px;
-  "
->
+      <v-app-bar-title>
 
-  <v-btn
-    v-if="authStore.role === 'admin'"
-    color="primary"
-    to="/dashboard/indicators"
-  >
-    Dashboard
-  </v-btn>
+        🎬 Reseñas App
 
-  <v-btn
-    v-if="authStore.user"
-    color="primary"
-    to="/peliculas"
-  >
-    Películas
-  </v-btn>
-  <v-btn
-    v-if="authStore.user"
-    color="secondary"
-    to="/mis-peliculas"
-  >
-    Mis películas
-  </v-btn>
+      </v-app-bar-title>
 
- 
-  <v-btn
-    v-if="authStore.user"
-    color="error"
-    @click="logout"
-  >
-    Cerrar sesión
-  </v-btn>
+      <template
+        v-if="
+          authStore.user &&
+          !estaEnDashboard
+        "
+      >
 
-</div>
-  </div>
+        <v-btn
+          to="/"
+          variant="text"
+        >
+          Inicio
+        </v-btn>
 
-</div>
+        <v-btn
+          to="/peliculas"
+          variant="text"
+        >
+          Películas
+        </v-btn>
 
-    <router-view />
+        <v-btn
+          to="/mis-peliculas"
+          variant="text"
+        >
+          Mis películas
+        </v-btn>
 
-  </div>
+        <v-btn
+          v-if="
+            authStore.role === 'admin'
+          "
+          to="/dashboard/indicators"
+          variant="text"
+        >
+          Dashboard
+        </v-btn>
+
+      </template>
+
+      <v-spacer />
+
+      <v-chip
+        v-if="authStore.user"
+        class="mr-3"
+        color="white"
+      >
+        {{ authStore.user.email }}
+      </v-chip>
+
+      <v-btn
+        v-if="authStore.user"
+        color="red"
+        @click="logout"
+      >
+        Salir
+      </v-btn>
+
+    </v-app-bar>
+
+    <v-main>
+
+      <router-view />
+
+    </v-main>
+
+  </v-app>
+
 </template>
 
 <style scoped>
