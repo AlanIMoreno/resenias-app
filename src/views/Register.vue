@@ -2,9 +2,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
+import { useAuthStore } from '../stores/auth'
 import { useSnackbarStore } from '../stores/snackbar'
+import { supabase } from '../lib/supabase'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const snackbar = useSnackbarStore()
 const { signup } = useAuth()
 
@@ -24,19 +27,33 @@ async function registrar() {
     return
   }
 
-  const { error } =
-    await signup(
-      email.value,
-      password.value
-    )
+  const { data, error } = await signup(
+    email.value,
+    password.value
+  )
 
   if (error) {
     snackbar.mostrar(error.message, 'error')
     return
   }
 
+  if (data?.session) {
+    authStore.setSession(data.session)
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+
+    if (profile) {
+      authStore.setProfile(profile)
+    }
+  }
+
   snackbar.mostrar('Usuario registrado correctamente', 'success')
-  router.push('/login')
+  
+  router.push('/')
 }
 </script>
 
@@ -72,8 +89,8 @@ async function registrar() {
 
           <v-text-field
             v-model="email"
-           label="Correo electrónico"
-           type="email"
+            label="Correo electrónico"
+            type="email"
             prepend-inner-icon="mdi-email"
             variant="outlined"
           />

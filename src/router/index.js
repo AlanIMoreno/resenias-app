@@ -120,7 +120,7 @@ if (
   )
 ) {
 
-  next('/peliculas')
+  next('/')
   return
 
 }
