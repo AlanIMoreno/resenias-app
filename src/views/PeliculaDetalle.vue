@@ -213,27 +213,25 @@ async function cargarResenias() {
     return
   }
 
-  const reseniasConEmail = await Promise.all(
+  const reseniasConUsuario = await Promise.all(
     (data || []).map(async (resenia) => {
-      const {
-        data: profile,
-        error: errorProfile
-      } = await supabase
+      const { data: profile } = await supabase
         .from('profiles')
-        .select('email')
+        .select('nombre, email')
         .eq('id', resenia.usuario_id)
         .maybeSingle()
 
       return {
         ...resenia,
-        emailUsuario:
-          profile?.email ??
-          resenia.usuario_id
+        nombreUsuario:
+          profile?.nombre ||
+          profile?.email ||
+          'Usuario anónimo'
       }
     })
   )
 
-  resenias.value = reseniasConEmail
+  resenias.value = reseniasConUsuario
 }
 
 onMounted(async () => {
@@ -318,7 +316,7 @@ onMounted(async () => {
           <v-card-text>
             <div class="mb-2">
               <strong>
-                {{ resenia.emailUsuario }}
+                {{ resenia.nombreUsuario }}
               </strong>
             </div>
 
@@ -365,4 +363,4 @@ onMounted(async () => {
       </v-col>
     </v-row>
   </v-container>
-</template>
+</template>F

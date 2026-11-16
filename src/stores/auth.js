@@ -34,7 +34,6 @@ export const useAuthStore = defineStore(
         if (session) {
           this.setSession(session)
           
-          // Buscamos también el perfil asociado
           const { data: profile } = await supabase
             .from('profiles')
             .select('*')

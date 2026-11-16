@@ -11,14 +11,20 @@ const authStore = useAuthStore()
 const snackbar = useSnackbarStore()
 const { signup } = useAuth()
 
+const nombre = ref('')
 const email = ref('')
 const password = ref('')
 
 async function registrar() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-  if (!email.value.trim() || !password.value.trim()) {
-    snackbar.mostrar('Complete correo electrónico y contraseña', 'warning')
+  if (!nombre.value.trim() || !email.value.trim() || !password.value.trim()) {
+    snackbar.mostrar('Complete nombre de usuario, correo y contraseña', 'warning')
+    return
+  }
+
+  if (nombre.value.trim().length < 3) {
+    snackbar.mostrar('El nombre de usuario debe tener al menos 3 caracteres', 'warning')
     return
   }
 
@@ -27,6 +33,7 @@ async function registrar() {
     return
   }
 
+  // 1. Registramos al usuario en Supabase Auth
   const { data, error } = await signup(
     email.value,
     password.value
@@ -37,22 +44,25 @@ async function registrar() {
     return
   }
 
-  if (data?.session) {
+  // 2. Guardamos la sesión y actualizamos su columna 'nombre' en profiles
+  if (data?.session && data?.user) {
     authStore.setSession(data.session)
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('*')
+      .update({ nombre: nombre.value.trim() })
       .eq('id', data.user.id)
+      .select()
       .single()
 
-    if (profile) {
+    if (profileError) {
+      snackbar.mostrar('Cuenta creada, pero no se pudo guardar el nombre: ' + profileError.message, 'warning')
+    } else if (profile) {
       authStore.setProfile(profile)
     }
   }
 
   snackbar.mostrar('Usuario registrado correctamente', 'success')
-  
   router.push('/')
 }
 </script>
@@ -86,6 +96,14 @@ async function registrar() {
               Regístrate para comenzar a crear y gestionar tus reseñas.
             </p>
           </div>
+
+          <v-text-field
+            v-model="nombre"
+            label="Nombre de usuario"
+            type="text"
+            prepend-inner-icon="mdi-account"
+            variant="outlined"
+          />
 
           <v-text-field
             v-model="email"
