@@ -66,10 +66,10 @@ async function ingresar() {
           md="6"
           lg="4"
         >
-          <v-card
-            elevation="10"
-            class="pa-8 auth-card"
-          >
+ <v-card
+  elevation="16"
+  class="pa-8 login-card"
+>
             <div class="text-center mb-6">
               <h1 class="text-h4 mb-2">
                 🔐 Iniciar sesión
@@ -147,5 +147,8 @@ async function ingresar() {
   background-color: rgba(28, 28, 36, 0.85) !important;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}.login-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px);
 }
 </style>

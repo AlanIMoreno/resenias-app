@@ -82,10 +82,10 @@ async function registrar() {
           md="6"
           lg="4"
         >
-          <v-card
-            elevation="12"
-            class="pa-8 auth-card"
-          >
+   <v-card
+  elevation="16"
+  class="pa-8 register-card"
+>
             <div class="text-center mb-6">
               <h1 class="text-h4 mb-2 font-weight-bold">
                 📝 Crear cuenta
@@ -172,5 +172,9 @@ async function registrar() {
   background-color: rgba(28, 28, 36, 0.85) !important;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.register-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(8px);
 }
 </style>
