@@ -29,190 +29,229 @@ function irMisPeliculas() {
 
 <template>
 
-  <v-container
-    fluid
-    class="hero"
-  >
+  <div class="hero">
 
-    <v-row
-      justify="center"
-      align="center"
-      class="fill-height"
+    <video
+      autoplay
+      muted
+      loop
+      playsinline
+      class="video-fondo"
     >
-
-      <v-col
-        cols="12"
-        md="8"
-        lg="6"
+      <source
+        src="/videos/vid.mp4"
+        type="video/mp4"
       >
+    </video>
 
-        <div class="text-center">
+    <div class="overlay">
 
-          <h1 class="titulo">
-            🎬 Reseñas de Películas
-          </h1>
+      <v-container fluid>
 
-          <p class="subtitulo">
-            Descubre películas, comparte opiniones
-            y consulta valoraciones de otros usuarios.
-          </p>
+        <v-row
+          justify="center"
+          align="center"
+          class="fill-height"
+        >
 
-          <div
-            v-if="!estaLogueado"
-            class="botones"
+          <v-col
+            cols="12"
+            md="8"
+            lg="6"
           >
 
-            <v-btn
-              color="primary"
-              size="large"
-              @click="irLogin"
-            >
-              Iniciar sesión
-            </v-btn>
+            <div class="text-center">
 
-            <v-btn
-              color="success"
-              size="large"
-              @click="irRegistro"
-            >
-              Registrarse
-            </v-btn>
+              <h1 class="titulo">
+                🎬 Reseñas de Películas
+              </h1>
 
-          </div>
+              <p class="subtitulo">
+                Descubre películas, comparte opiniones
+                y consulta valoraciones de otros usuarios.
+              </p>
 
-          <div
-            v-else
-            class="botones"
+              <div
+                v-if="!estaLogueado"
+                class="botones"
+              >
+
+                <v-btn
+                  color="primary"
+                  size="large"
+                  @click="irLogin"
+                >
+                  Iniciar sesión
+                </v-btn>
+
+                <v-btn
+                  color="success"
+                  size="large"
+                  @click="irRegistro"
+                >
+                  Registrarse
+                </v-btn>
+
+              </div>
+
+              <div
+                v-else
+                class="botones"
+              >
+
+                <v-btn
+                  color="primary"
+                  size="large"
+                  @click="irPeliculas"
+                >
+                  Explorar películas
+                </v-btn>
+
+                <v-btn
+                  color="secondary"
+                  size="large"
+                  @click="irMisPeliculas"
+                >
+                  Mis películas
+                </v-btn>
+
+              </div>
+
+            </div>
+
+          </v-col>
+
+        </v-row>
+
+       <v-row style="margin-top: 140px;">
+
+          <v-col
+            cols="12"
+            md="4"
           >
 
-            <v-btn
-              color="primary"
-              size="large"
-              @click="irPeliculas"
+            <v-card
+              elevation="6"
+class="pa-4 text-center"            >
+
+              <div class="text-h3">
+                🎬
+              </div>
+
+              <div class="text-h5 mt-2">
+                Películas
+              </div>
+
+              <div class="text-medium-emphasis">
+                Busca y descubre películas.
+              </div>
+
+            </v-card>
+
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="4"
+          >
+
+            <v-card
+              elevation="6"
+              class="pa-4 text-center"
             >
-              Explorar películas
-            </v-btn>
 
-            <v-btn
-              color="secondary"
-              size="large"
-              @click="irMisPeliculas"
+              <div class="text-h3">
+                ⭐
+              </div>
+
+              <div class="text-h5 mt-2">
+                Reseñas
+              </div>
+
+              <div class="text-medium-emphasis">
+                Comparte tu opinión con otros usuarios.
+              </div>
+
+            </v-card>
+
+          </v-col>
+
+          <v-col
+            cols="12"
+            md="4"
+          >
+
+            <v-card
+              elevation="6"
+            class="pa-4 text-center"
             >
-              Mis películas
-            </v-btn>
 
-          </div>
+              <div class="text-h3">
+                👥
+              </div>
 
-        </div>
+              <div class="text-h5 mt-2">
+                Comunidad
+              </div>
 
-      </v-col>
+              <div class="text-medium-emphasis">
+                Consulta valoraciones reales.
+              </div>
 
-    </v-row>
+            </v-card>
 
-  </v-container>
-<v-container class="mt-12">
+          </v-col>
 
-  <v-row>
+        </v-row>
 
-    <v-col
-      cols="12"
-      md="4"
-    >
+      </v-container>
 
-      <v-card
-        elevation="4"
-        class="pa-6 text-center"
-      >
+    </div>
 
-        <div class="text-h3">
-          🎬
-        </div>
+  </div>
 
-        <div class="text-h5 mt-2">
-          Películas
-        </div>
-
-        <div class="text-medium-emphasis">
-          Busca y descubre películas.
-        </div>
-
-      </v-card>
-
-    </v-col>
-
-    <v-col
-      cols="12"
-      md="4"
-    >
-
-      <v-card
-        elevation="4"
-        class="pa-6 text-center"
-      >
-
-        <div class="text-h3">
-          ⭐
-        </div>
-
-        <div class="text-h5 mt-2">
-          Reseñas
-        </div>
-
-        <div class="text-medium-emphasis">
-          Comparte tu opinión con otros usuarios.
-        </div>
-
-      </v-card>
-
-    </v-col>
-
-    <v-col
-      cols="12"
-      md="4"
-    >
-
-      <v-card
-        elevation="4"
-        class="pa-6 text-center"
-      >
-
-        <div class="text-h3">
-          👥
-        </div>
-
-        <div class="text-h5 mt-2">
-          Comunidad
-        </div>
-
-        <div class="text-medium-emphasis">
-          Consulta valoraciones reales.
-        </div>
-
-      </v-card>
-
-    </v-col>
-
-  </v-row>
-
-</v-container>
 </template>
 
 <style scoped>
-
 .hero {
-  min-height: 80vh;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.video-fondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.overlay {
+  position: relative;
+  z-index: 1;
+
+  min-height: 100vh;
+
+  background: rgba(0, 0, 0, 0.55);
+
+  color: white;
+
   display: flex;
   align-items: center;
-  justify-content: center;
 }
 
 .titulo {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 20px;
+  font-weight: bold;
 }
 
 .subtitulo {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   margin-bottom: 30px;
 }
 
@@ -223,4 +262,11 @@ function irMisPeliculas() {
   flex-wrap: wrap;
 }
 
+.v-card {
+  background: rgba(255, 255, 255, 0.9);
+}
+.v-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(5px);
+}
 </style>
