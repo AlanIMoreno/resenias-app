@@ -32,6 +32,25 @@ const promedioUsuarios = computed(() => {
   ).toFixed(1)
 })
 
+// Fondo dinámico basado en el backdrop de la película de TMDb
+const fondoDinamico = computed(() => {
+  if (!pelicula.value?.backdrop_path) {
+    return {
+      background: 'radial-gradient(circle at top, #1e293b 0%, #121212 70%)'
+    }
+  }
+
+  return {
+    backgroundImage: `
+      linear-gradient(to bottom, rgba(18, 18, 18, 0.68) 0%, rgba(18, 18, 18, 0.92) 45%, #121212 85%),
+      url('https://image.tmdb.org/t/p/original${pelicula.value.backdrop_path}')
+    `,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center top',
+    backgroundRepeat: 'no-repeat'
+  }
+})
+
 function formatearFecha(fecha) {
   return new Date(fecha).toLocaleDateString('es-AR')
 }
@@ -39,7 +58,6 @@ function formatearFecha(fecha) {
 const { obtenerPelicula } = useTmdb()
 
 async function guardarPeliculaSiNoExiste() {
-  // 1. Buscar si la película ya existe
   const { data: existente, error: errorBusqueda } =
     await supabase
       .from('peliculas')
@@ -52,14 +70,11 @@ async function guardarPeliculaSiNoExiste() {
     return
   }
 
-  // 2. Si existe, recuperar su ID
   if (existente) {
     peliculaDbId.value = existente.id
-    console.log('Película ya existe:', existente)
     return
   }
 
-  // 3. Si no existe, insertarla
   const { data, error } =
     await supabase
       .from('peliculas')
@@ -72,15 +87,12 @@ async function guardarPeliculaSiNoExiste() {
       .select()
       .single()
 
-  // 4. Verificar errores de inserción
   if (error) {
     console.error('Error al guardar película:', error)
     return
   }
 
-  // 5. Guardar el ID generado por Supabase
   peliculaDbId.value = data.id
-  console.log('Película guardada:', data)
 }
 
 async function guardarResenia() {
@@ -242,125 +254,154 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-container v-if="pelicula">
-    <v-row>
-      <v-col cols="12" md="4">
-        <v-img
-          :src="`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`"
-          height="500"
-          cover
-        />
-      </v-col>
+  <div
+    v-if="pelicula"
+    class="detalle-wrapper"
+    :style="fondoDinamico"
+  >
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-img
+            :src="`https://image.tmdb.org/t/p/w500${pelicula.poster_path}`"
+            height="500"
+            cover
+            class="rounded-lg elevation-10"
+          />
+        </v-col>
 
-      <v-col cols="12" md="8">
-        <div class="mb-6">
-          <h1 class="text-h3 mb-2">
-            {{ pelicula.title }}
-          </h1>
+        <v-col cols="12" md="8">
+          <div class="mb-6">
+            <h1 class="text-h3 mb-2">
+              {{ pelicula.title }}
+            </h1>
 
-          <div class="text-medium-emphasis mb-2">
-            📅 {{ pelicula.release_date }}
+            <div class="text-medium-emphasis mb-2">
+              📅 {{ pelicula.release_date }}
+            </div>
+
+            <div class="mb-2">
+              ⭐ TMDb:
+              {{ pelicula.vote_average }}
+            </div>
+
+            <div>
+              👥 Usuarios:
+              {{ promedioUsuarios }}
+              ({{ resenias.length }} reseñas)
+            </div>
           </div>
 
-          <div class="mb-2">
-            ⭐ TMDb:
-            {{ pelicula.vote_average }}
-          </div>
+          <v-card
+            class="pa-4 mb-6"
+            elevation="4"
+          >
+            <h2 class="mb-4">
+              Tu reseña
+            </h2>
 
-          <div>
-            👥 Usuarios:
-            {{ promedioUsuarios }}
-            ({{ resenias.length }} reseñas)
-          </div>
-        </div>
+            <v-select
+              v-model="rating"
+              :items="[1,2,3,4,5]"
+              label="Puntuación"
+              variant="outlined"
+            />
 
-        <v-card
-          class="pa-4 mb-6"
-          elevation="4"
-        >
+            <v-textarea
+              v-model="comentario"
+              label="Comentario"
+              variant="outlined"
+            />
+
+            <v-btn
+              color="success"
+              @click="guardarResenia"
+            >
+              Guardar reseña
+            </v-btn>
+          </v-card>
+
           <h2 class="mb-4">
-            Tu reseña
+            Reseñas de usuarios
           </h2>
 
-          <v-select
-            v-model="rating"
-            :items="[1,2,3,4,5]"
-            label="Puntuación"
-            variant="outlined"
-          />
-
-          <v-textarea
-            v-model="comentario"
-            label="Comentario"
-            variant="outlined"
-          />
-
-          <v-btn
-            color="success"
-            @click="guardarResenia"
+          <v-card
+            v-for="resenia in resenias"
+            :key="resenia.id"
+            class="mb-4"
+            elevation="3"
           >
-            Guardar reseña
-          </v-btn>
-        </v-card>
+            <v-card-text>
+              <div class="mb-2">
+                <strong>
+                  {{ resenia.nombreUsuario }}
+                </strong>
+              </div>
 
-        <h2 class="mb-4">
-          Reseñas de usuarios
-        </h2>
+              <div class="mb-2">
+                ⭐ {{ resenia.rating }}/5
+              </div>
 
-        <v-card
-          v-for="resenia in resenias"
-          :key="resenia.id"
-          class="mb-4"
-          elevation="3"
-        >
-          <v-card-text>
-            <div class="mb-2">
-              <strong>
-                {{ resenia.nombreUsuario }}
-              </strong>
-            </div>
+              <p>
+                {{ resenia.comentario }}
+              </p>
 
-            <div class="mb-2">
-              ⭐ {{ resenia.rating }}/5
-            </div>
+              <small>
+                {{ formatearFecha(resenia.fecha) }}
+              </small>
 
-            <p>
-              {{ resenia.comentario }}
-            </p>
+              <div class="mt-3">
+                <v-btn
+                  v-if="
+                    authStore.user &&
+                    resenia.usuario_id === authStore.user.id
+                  "
+                  color="warning"
+                  size="small"
+                  class="mr-2"
+                  @click="editarResenia(resenia)"
+                >
+                  Editar
+                </v-btn>
 
-            <small>
-              {{ formatearFecha(resenia.fecha) }}
-            </small>
+                <v-btn
+                  v-if="
+                    authStore.user &&
+                    resenia.usuario_id === authStore.user.id
+                  "
+                  color="error"
+                  size="small"
+                  @click="eliminarResenia(resenia.id)"
+                >
+                  Eliminar
+                </v-btn>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>
 
-            <div class="mt-3">
-              <v-btn
-                v-if="
-                  authStore.user &&
-                  resenia.usuario_id === authStore.user.id
-                "
-                color="warning"
-                size="small"
-                class="mr-2"
-                @click="editarResenia(resenia)"
-              >
-                Editar
-              </v-btn>
+<style scoped>
+.login-wrapper {
+  min-height: 90vh;
+  background-image: 
+    linear-gradient(rgba(18, 18, 24, 0.82), rgba(18, 18, 24, 0.94)),
+    url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
 
-              <v-btn
-                v-if="
-                  authStore.user &&
-                  resenia.usuario_id === authStore.user.id
-                "
-                color="error"
-                size="small"
-                @click="eliminarResenia(resenia.id)"
-              >
-                Eliminar
-              </v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>F
+.login-container {
+  min-height: 90vh;
+}
+
+.auth-card {
+  background-color: rgba(28, 28, 36, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+</style>

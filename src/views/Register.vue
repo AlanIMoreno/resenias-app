@@ -33,7 +33,7 @@ async function registrar() {
     return
   }
 
-  // 1. Registramos al usuario en Supabase Auth
+
   const { data, error } = await signup(
     email.value,
     password.value
@@ -44,7 +44,6 @@ async function registrar() {
     return
   }
 
-  // 2. Guardamos la sesión y actualizamos su columna 'nombre' en profiles
   if (data?.session && data?.user) {
     authStore.setSession(data.session)
 
@@ -68,93 +67,110 @@ async function registrar() {
 </script>
 
 <template>
-  <v-container
-    fluid
-    class="register-container"
-  >
-    <v-row
-      justify="center"
-      align="center"
-      class="fill-height"
+  <div class="register-wrapper">
+    <v-container
+      fluid
+      class="register-container fill-height"
     >
-      <v-col
-        cols="12"
-        sm="8"
-        md="6"
-        lg="4"
+      <v-row
+        justify="center"
+        align="center"
       >
-        <v-card
-          elevation="10"
-          class="pa-8"
+        <v-col
+          cols="12"
+          sm="8"
+          md="6"
+          lg="4"
         >
-          <div class="text-center mb-6">
-            <h1 class="text-h4 mb-2">
-              📝 Crear cuenta
-            </h1>
-
-            <p class="text-medium-emphasis">
-              Regístrate para comenzar a crear y gestionar tus reseñas.
-            </p>
-          </div>
-
-          <v-text-field
-            v-model="nombre"
-            label="Nombre de usuario"
-            type="text"
-            prepend-inner-icon="mdi-account"
-            variant="outlined"
-          />
-
-          <v-text-field
-            v-model="email"
-            label="Correo electrónico"
-            type="email"
-            prepend-inner-icon="mdi-email"
-            variant="outlined"
-          />
-
-          <v-text-field
-            v-model="password"
-            label="Contraseña"
-            type="password"
-            prepend-inner-icon="mdi-lock"
-            variant="outlined"
-            @keyup.enter="registrar"
-          />
-
-          <v-btn
-            block
-            color="success"
-            size="large"
-            class="mt-2"
-            @click="registrar"
+          <v-card
+            elevation="12"
+            class="pa-8 auth-card"
           >
-            Registrarse
-          </v-btn>
+            <div class="text-center mb-6">
+              <h1 class="text-h4 mb-2 font-weight-bold">
+                📝 Crear cuenta
+              </h1>
 
-          <div class="text-center mt-6">
-            <span>
-              ¿Ya tienes cuenta?
-            </span>
+              <p class="text-medium-emphasis">
+                Regístrate para comenzar a crear y gestionar tus reseñas.
+              </p>
+            </div>
 
-            <br>
+            <v-text-field
+              v-model="nombre"
+              label="Nombre de usuario"
+              type="text"
+              prepend-inner-icon="mdi-account"
+              variant="outlined"
+            />
+
+            <v-text-field
+              v-model="email"
+              label="Correo electrónico"
+              type="email"
+              prepend-inner-icon="mdi-email"
+              variant="outlined"
+            />
+
+            <v-text-field
+              v-model="password"
+              label="Contraseña"
+              type="password"
+              prepend-inner-icon="mdi-lock"
+              variant="outlined"
+              @keyup.enter="registrar"
+            />
 
             <v-btn
-              variant="text"
-              color="primary"
-              to="/login"
+              block
+              color="success"
+              size="large"
+              class="mt-2"
+              @click="registrar"
             >
-              Iniciar sesión
+              Registrarse
             </v-btn>
-          </div>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+
+            <div class="text-center mt-6">
+              <span class="text-medium-emphasis">
+                ¿Ya tienes cuenta?
+              </span>
+
+              <br>
+
+              <v-btn
+                variant="text"
+                color="primary"
+                to="/login"
+              >
+                Iniciar sesión
+              </v-btn>
+            </div>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <style scoped>
+.register-wrapper {
+  min-height: 90vh;
+  background-image: 
+    linear-gradient(rgba(18, 18, 24, 0.82), rgba(18, 18, 24, 0.94)),
+    url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=80');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
 .register-container {
-  min-height: 85vh;
+  min-height: 90vh;
+}
+
+.auth-card {
+  background-color: rgba(28, 28, 36, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 </style>
