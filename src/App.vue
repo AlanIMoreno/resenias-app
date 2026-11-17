@@ -2,18 +2,20 @@
 import { onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
+import { useSnackbarStore } from './stores/snackbar' // <-- 1. Importamos el store
 import { supabase } from './lib/supabase'
 
 const router = useRouter()
 const route = useRoute()
 
 const authStore = useAuthStore()
+const snackbar = useSnackbarStore() // <-- 2. Inicializamos el store
 
 const estaEnDashboard = computed(() => {
   return route.path.startsWith('/dashboard')
 })
-onMounted(async () => {
 
+onMounted(async () => {
   const {
     data: { session }
   } = await supabase.auth.getSession()
@@ -32,35 +34,26 @@ onMounted(async () => {
       .single()
 
   authStore.setProfile(profile)
-console.log('PROFILE APP', profile)
-console.log('ROLE STORE', authStore.role)
+  console.log('PROFILE APP', profile)
+  console.log('ROLE STORE', authStore.role)
 })
 
 async function logout() {
-
   await supabase.auth.signOut()
-
   authStore.clear()
-
   router.push('/login')
-
 }
 </script>
 
 <template>
-
   <v-app>
-
     <v-app-bar
       color="indigo-darken-2"
       density="comfortable"
       elevation="4"
     >
-
       <v-app-bar-title>
-
         🎬 Reseñas App
-
       </v-app-bar-title>
 
       <template
@@ -69,7 +62,6 @@ async function logout() {
           !estaEnDashboard
         "
       >
-
         <v-btn
           to="/"
           variant="text"
@@ -100,7 +92,6 @@ async function logout() {
         >
           Dashboard
         </v-btn>
-
       </template>
 
       <v-spacer />
@@ -120,17 +111,28 @@ async function logout() {
       >
         Salir
       </v-btn>
-
     </v-app-bar>
 
     <v-main>
-
       <router-view />
-
     </v-main>
 
-  </v-app>
+    <!-- 3. Agregamos el Snackbar global -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      :timeout="snackbar.timeout"
+      location="bottom right"
+    >
+      {{ snackbar.text }}
 
+      <template #actions>
+        <v-btn variant="text" @click="snackbar.show = false">
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </v-app>
 </template>
 
 <style scoped>

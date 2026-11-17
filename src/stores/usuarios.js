@@ -1,25 +1,33 @@
 import { defineStore } from 'pinia'
+import { supabase } from '../lib/supabase'
 
 export const useUsuariosStore = defineStore('usuarios', {
   state: () => ({
-    lista: [] as any[],
+    lista: [],
     cargando: false
   }),
   actions: {
     async cargarUsuarios() {
       this.cargando = true
-      // acá después conectamos con Supabase
-      this.lista = [
-        { id: 1, nombre: 'Alan' },
-        { id: 2, nombre: 'María' }
-      ]
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('creado_en', { ascending: false })
+
+      if (!error && data) {
+        this.lista = data
+      }
       this.cargando = false
     },
-    agregarUsuario(usuario) {
-      this.lista.push(usuario)
-    },
-    eliminarUsuario(id) {
-      this.lista = this.lista.filter(u => u.id !== id)
+    async eliminarUsuario(id) {
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', id)
+
+      if (!error) {
+        this.lista = this.lista.filter(u => u.id !== id)
+      }
     }
   }
 })
