@@ -1,5 +1,5 @@
-const API_KEY = '33a1491efdbe8c92b8ba084e240b576f'
-
+const API_KEY =
+  import.meta.env.VITE_TMDB_API_KEY
 export function useTmdb() {
 
   async function buscarPeliculas(query) {
