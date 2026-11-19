@@ -82,7 +82,13 @@ async function logout() {
         >
           Mis películas
         </v-btn>
-
+<v-btn
+  v-if="authStore.user"
+  to="/recomendaciones"
+  variant="text"
+>
+  IA Recomendaciones
+</v-btn>
         <v-btn
           v-if="
             authStore.role === 'admin'

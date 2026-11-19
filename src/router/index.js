@@ -68,7 +68,12 @@ const routes = [
     component: () =>
       import('../views/Peliculas.vue')
   },
-
+{
+  path: '/recomendaciones',
+  name: 'recomendaciones',
+  component: () =>
+    import('../views/Recomendaciones.vue')
+},
   {
     path: '/peliculas/:id',
     name: 'pelicula-detalle',
