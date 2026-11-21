@@ -1,221 +1,115 @@
 # Reseñas de películas
 
-Aplicación web para explorar películas, compartir reseñas y administrar usuarios. El proyecto está desarrollado con Vue 3 y Vite; utiliza Supabase para autenticación y persistencia de datos, y The Movie Database (TMDb) para consultar información cinematográfica.
+Aplicación web de una sola página para buscar películas, consultar y publicar reseñas, administrar usuarios y obtener recomendaciones personalizadas. La interfaz está hecha con Vue 3 y Vuetify; Supabase gestiona autenticación y datos, y TMDb aporta información sobre películas.
 
+## Funcionalidades
 
-## Tabla de contenidos
+- Registro, inicio y cierre de sesión.
+- Búsqueda de películas y consulta de sus detalles mediante TMDb.
+- Creación, consulta, edición y eliminación de reseñas con puntuaciones de 1 a 5.
+- Página **Mis películas**, con acceso a las películas reseñadas por la persona autenticada.
+- Panel de administración protegido por rol, con indicadores, gestión de roles y moderación de reseñas.
+- Recomendaciones con análisis de preferencias mediante Gemini y alternativa de recomendaciones de TMDb.
+- Aplicación instalable como PWA.
 
-- [Descripción general](#descripción-general)
-- [Objetivos](#objetivos)
-- [Tecnologías](#tecnologías)
-- [Arquitectura](#arquitectura)
-- [Requisitos previos](#requisitos-previos)
-- [Instalación](#instalación)
-- [Configuración del entorno](#configuración-del-entorno)
-- [Variables VITE](#variables-vite)
-- [GitHub Secrets para despliegue](#github-secrets-para-despliegue)
-- [Estructura del proyecto](#estructura-del-proyecto)
-- [Casos de uso](#casos-de-uso)
-- [Despliegue](#despliegue)
+## Tecnologías y arquitectura
 
-
-## Descripción general
-
-La aplicación permite que una persona cree una cuenta, busque películas y consulte sus detalles. Los usuarios autenticados pueden publicar una reseña con una puntuación de 1 a 5 y un comentario, y editar o eliminar sus propias reseñas. También pueden volver a consultar las películas que reseñaron.
-
-La plataforma incluye vistas administrativas para consultar indicadores, gestionar roles y moderar reseñas. La autenticación y los datos de perfiles, películas y reseñas se gestionan mediante Supabase. Los resultados de películas, sus valoraciones externas y sus imágenes se obtienen de TMDb.
-
-## Objetivos
-
-- Ofrecer una interfaz para buscar películas y consultar información y reseñas.
-- Permitir a los usuarios registrarse y administrar sus propias reseñas.
-- Incorporar vistas de administración para gestionar roles, supervisar reseñas y consultar indicadores.
-- Aplicar una arquitectura frontend modular con rutas, estado compartido e integración con servicios externos.
-- Servir como proyecto académico para practicar desarrollo web y consumo de APIs.
-
-## Tecnologías
-
-| Tecnología | Uso |
+| Tecnología | Responsabilidad |
 | --- | --- |
-| [Vue 3](https://vuejs.org/) | Interfaz de usuario con componentes y Composition API. |
-| [Vite](https://vite.dev/) | Servidor de desarrollo y compilación para producción. |
-| [Vuetify](https://vuetifyjs.com/) | Componentes y estilos de interfaz. |
-| [Vue Router](https://router.vuejs.org/) | Navegación entre vistas y control de acceso a rutas. |
-| [Pinia](https://pinia.vuejs.org/) | Estado compartido de autenticación, usuarios y otros datos. |
-| [Supabase](https://supabase.com/) | Autenticación y acceso a la base de datos desde el cliente. |
-| [TMDb API](https://developer.themoviedb.org/) | Búsqueda y consulta de películas. |
-| [TypeScript](https://www.typescriptlang.org/) | Herramientas de verificación de tipos para el proyecto Vue. |
-| Node.js y npm | Entorno de ejecución y gestión de dependencias. |
-
-## Arquitectura
-
-La aplicación es una SPA (Single-Page Application) ejecutada en el navegador. No incluye un servidor backend propio.
+| Vue 3 | Interfaz basada en componentes y Composition API. |
+| Vue Router | Navegación SPA y protección de rutas. |
+| Pinia | Estado compartido de autenticación y notificaciones, además de stores de dominio. |
+| Vuetify | Componentes visuales. |
+| Supabase | Autenticación y acceso a perfiles, películas y reseñas. |
+| TMDb | Búsqueda, detalles y recomendaciones de películas. |
+| Gemini | Análisis de gustos cinematográficos. |
+| Vite + `vite-plugin-pwa` | Desarrollo, compilación y recursos PWA. |
 
 ```text
-Navegador
-└── Vue 3 + Vuetify
-    ├── Vue Router ── navegación y comprobación de sesión/rol
-    ├── Pinia ─────── estado compartido
-    ├── Supabase JS ─ autenticación y consultas de datos
-    │   └── Supabase Auth + tablas profiles, peliculas y reseñas
-    └── TMDb API ──── búsqueda y detalles de películas
+src/
+├── components/       # Componentes Vue; incluye un componente de ejemplo sin uso actual
+├── composables/      # Integraciones con Supabase Auth, TMDb y Gemini
+├── lib/              # Cliente Supabase
+├── plugins/          # Configuración de Vuetify
+├── router/           # Rutas y guarda de acceso
+├── stores/           # Estado Pinia
+├── views/            # Pantallas de usuario y administración
+│   └── Dashboard/    # Indicadores, usuarios y moderación de reseñas
+├── App.vue           # Estructura principal y navegación
+└── main.js           # Inicialización de Vue, Pinia, Router y PWA
 ```
 
-- **Presentación:** vistas Vue para inicio, autenticación, películas, detalle, reseñas y administración.
-- **Navegación y acceso:** Vue Router define las rutas; solo inicio, acceso y registro son públicos. Las demás requieren sesión y las administrativas requieren el rol `admin`.
-- **Estado:** Pinia mantiene información de sesión, perfiles, películas y notificaciones.
-- **Datos y autenticación:** el cliente de Supabase se comunica directamente con Supabase. La aplicación espera tablas como `profiles`, `peliculas` y `reseñas`.
-- **Catálogo externo:** el composable de TMDb realiza búsquedas y consultas de detalles desde el navegador.
+## Rutas principales
 
-## Requisitos previos
+| Ruta | Acceso y función |
+| --- | --- |
+| `/` | Inicio, acceso público. |
+| `/login`, `/register` | Autenticación y alta de cuenta. |
+| `/peliculas`, `/peliculas/:id` | Búsqueda, detalle y reseñas. Requieren sesión. |
+| `/mis-peliculas` | Películas reseñadas por la persona autenticada. Requiere sesión. |
+| `/recomendaciones` | Análisis con IA y recomendaciones. Requiere sesión. |
+| `/dashboard/indicators` | Indicadores administrativos. Requiere rol `admin`. |
+| `/dashboard/backup` | Listado de usuarios y modificación de roles. Requiere rol `admin`. |
+| `/dashboard/logs` | Moderación de reseñas. Requiere rol `admin`. |
 
-- Node.js **22.18 o superior** dentro de la serie `22.x`, o **24.12 o superior**. El proyecto declara estos rangos en `package.json`.
-- npm, incluido con Node.js.
-- Un proyecto de Supabase con autenticación y las tablas, columnas y relaciones que consulta la aplicación.
-- Credenciales válidas para los servicios Supabase y TMDb.
+La guarda de `src/router/index.js` consulta la sesión de Supabase y el rol del perfil para autorizar rutas administrativas. La autorización del lado del cliente no reemplaza las políticas de seguridad de la base de datos.
 
+## Requisitos
 
+- Node.js `^22.18.0` o `>=24.12.0` y npm.
+- Un proyecto Supabase con autenticación habilitada.
+- Credenciales para Supabase y TMDb. Para recomendaciones con IA también se necesita una clave de Gemini.
 
-## Instalación
+La aplicación espera las tablas `profiles`, `peliculas` y `reseñas`, así como los campos y relaciones que consultan las vistas. El repositorio no incluye migraciones SQL ni políticas RLS; deben prepararse en Supabase antes de probar las operaciones. En particular, configura las políticas para que cada usuario gestione sus propias reseñas y para restringir las operaciones administrativas.
 
-1. Clona el repositorio y entra en su directorio:
+## Instalación y ejecución
 
-   ```bash
-   git clone https://github.com/AlanIMoreno/resenias-app.git
-   cd resenias-app
-   ```
+```bash
+git clone https://github.com/AlanIMoreno/resenias-app.git
+cd resenias-app
+npm ci
+```
 
-2. Instala las dependencias:
+Crea un archivo `.env` en la raíz y configura:
 
-   ```bash
-   npm ci
-   ```
+```dotenv
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=tu-clave-publica
+VITE_TMDB_API_KEY=tu-clave-de-tmdb
+VITE_GEMINI_API_KEY=tu-clave-de-gemini
+```
 
-   Si no dispones de `package-lock.json`, puedes usar `npm install`.
+El `.env` está excluido del repositorio mediante `.gitignore`. Las variables con prefijo `VITE_` se incorporan al código cliente y pueden ser visibles en el navegador; nunca uses aquí una clave `service_role`, una contraseña ni credenciales administrativas. Protege el acceso a Supabase con RLS y aplica restricciones y cuotas a las claves de servicios externos.
 
-3. Configura los servicios externos siguiendo [Configuración del entorno](#configuración-del-entorno).
+Luego ejecuta:
 
-4. Inicia el servidor de desarrollo:
+```bash
+npm run dev
+```
 
-   ```bash
-   npm run dev
-   ```
+Abre la dirección local indicada por Vite.
 
-5. Abre en el navegador la dirección local que indique Vite en la terminal.
-
-### Comandos disponibles
+## Comandos
 
 | Comando | Descripción |
 | --- | --- |
-| `npm run dev` | Inicia el servidor de desarrollo con recarga en caliente. |
-| `npm run type-check` | Comprueba los tipos de los componentes Vue. |
-| `npm run build` | Ejecuta la comprobación de tipos y genera la compilación de producción. |
-| `npm run build-only` | Genera la compilación de producción sin ejecutar antes la comprobación de tipos. |
-| `npm run preview` | Sirve localmente la compilación para revisarla. Ejecuta primero `npm run build`. |
+| `npm run dev` | Servidor de desarrollo. |
+| `npm run type-check` | Verificación de tipos de los componentes Vue. |
+| `npm run build` | Verificación de tipos y compilación de producción. |
+| `npm run build-only` | Compilación sin la verificación previa de tipos. |
+| `npm run preview` | Vista local de la compilación. |
 
-## Configuración del entorno
+## PWA
 
+`vite.config.ts` define el manifiesto y los íconos de la aplicación. `src/main.js` registra el service worker con actualización automática. La PWA permite instalar la interfaz; las operaciones que dependen de Supabase, TMDb o Gemini siguen requiriendo conexión y sus servicios configurados.
 
-## Variables VITE
+## Integración y despliegue
 
-Las siguientes variables son la propuesta para parametrizar las integraciones existentes. **Aún no están conectadas al código actual**; deben leerse explícitamente desde `import.meta.env` en los módulos correspondientes antes de que surtan efecto.
+Hay dos workflows que se ejecutan ante cambios en `main`:
 
-| Variable | Descripción | Sensibilidad y uso |
-| --- | --- | --- |
-| `VITE_SUPABASE_URL` | URL del proyecto Supabase, por ejemplo `https://<proyecto>.supabase.co`. La utiliza el cliente de Supabase para conectarse al proyecto. | Configuración pública; no equivale a una contraseña. |
-| `VITE_SUPABASE_ANON_KEY` | Clave pública `anon`/publishable utilizada por el cliente de Supabase. | Es visible en el navegador. Nunca la sustituyas por `service_role`; protege los datos mediante RLS. |
-| `VITE_TMDB_API_KEY` | Clave de TMDb usada por las solicitudes de búsqueda y detalle de películas. | Al usarse directamente desde el navegador, queda expuesta al público. Aplica límites y restricciones; para mantenerla confidencial se necesita un backend o proxy. |
+- `.github/workflows/ci.yml` instala dependencias y ejecuta `npm run build`.
+- `.github/workflows/deploy.yml` solicita a Netlify iniciar el despliegue mediante un build hook. No publica directamente `dist` desde GitHub Actions.
 
-Vite expone al frontend únicamente las variables con prefijo `VITE_`. No coloques contraseñas, tokens administrativos ni claves privadas bajo ese prefijo.
+Configura en GitHub Actions el secret `NETLIFY_BUILD_HOOK` con la URL privada del build hook de Netlify. Configura las cuatro variables `VITE_*` en el entorno de compilación del proveedor que construya la aplicación (por ejemplo, Netlify); el workflow de despliegue solo dispara el hook. Para despliegues manuales, ejecuta `npm run build` y publica el contenido de `dist/`. El hosting debe redirigir las rutas de la SPA a `index.html`.
 
-## GitHub Secrets para despliegue
-
-Actualmente el repositorio **no contiene un workflow de GitHub Actions**, y por tanto no hay GitHub Secrets configurados o consumidos por el proceso de despliegue. Los secretos no son necesarios para compilar con la configuración que hoy está escrita en el código.
-
-Si se incorpora un workflow para compilar y desplegar, se pueden configurar estos valores desde **GitHub → Settings → Secrets and variables → Actions → New repository secret**:
-
-| Nombre sugerido | Valor | Observaciones |
-| --- | --- | --- |
-| `VITE_SUPABASE_URL` | URL del proyecto Supabase. | Es configuración pública; también se puede almacenar como variable de Actions si se prefiere. |
-| `VITE_SUPABASE_ANON_KEY` | Clave pública `anon`/publishable del proyecto. | El nombre `Secrets` protege el valor durante la configuración del workflow, pero no evita que Vite lo incluya en el bundle público. |
-| `VITE_TMDB_API_KEY` | Clave de API de TMDb. | El bundle frontend la hace visible al usuario. Un secret de GitHub no la convierte en privada en producción. |
-
-Para que GitHub Actions las use, el workflow debe asignarlas al entorno del paso que ejecuta la compilación, por ejemplo:
-
-```yaml
-- name: Compilar aplicación
-  run: npm ci && npm run build
-  env:
-    VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-    VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-    VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
-```
-
-Este fragmento es ilustrativo: **no hay un workflow que lo ejecute en el repositorio actual**, y añadir los Secrets no tendrá efecto hasta migrar el código para leer estas variables. No guardes nunca `service_role`, contraseñas de usuarios ni credenciales administrativas en variables `VITE_*` o en código cliente.
-
-## Estructura del proyecto
-
-```text
-.
-├── public/                 # Recursos estáticos servidos directamente
-├── src/
-│   ├── assets/             # Recursos importados por la aplicación
-│   ├── components/         # Componentes reutilizables
-│   ├── composables/        # Lógica reutilizable (autenticación y TMDb)
-│   ├── lib/                # Cliente de Supabase
-│   ├── plugins/            # Configuración de Vuetify
-│   ├── router/             # Rutas y guardas de navegación
-│   ├── stores/             # Estado global con Pinia
-│   ├── views/              # Vistas de usuario y administración
-│   │   └── Dashboard/      # Indicadores, gestión de roles y reseñas
-│   ├── App.vue             # Componente raíz
-│   └── main.js             # Inicialización de Vue, Pinia, Router y Vuetify
-├── index.html              # Documento HTML de entrada
-├── package.json            # Dependencias, scripts y versión de Node
-├── package-lock.json       # Versiones bloqueadas de dependencias
-└── vite.config.ts          # Configuración de Vite
-```
-
-## Casos de uso
-
-### Usuario
-
-1. Crear una cuenta con nombre, correo electrónico y contraseña.
-2. Iniciar sesión y cerrar sesión.
-3. Buscar películas en TMDb y consultar sus detalles después de iniciar sesión.
-4. Consultar las reseñas publicadas y el promedio de puntuaciones de usuarios.
-5. Publicar una reseña con una puntuación de 1 a 5 y un comentario.
-6. Editar o eliminar sus propias reseñas.
-7. Consultar en **Mis películas** las películas que ha reseñado.
-
-### Administrador
-
-1. Acceder a las vistas protegidas por el rol `admin`.
-2. Consultar indicadores de usuarios, películas, reseñas y administradores.
-3. Revisar la lista de usuarios y cambiar su rol entre `user` y `admin`.
-4. Consultar y moderar reseñas, incluida su eliminación.
-
-Las operaciones administrativas también deben estar restringidas mediante políticas RLS en Supabase. Ocultar o proteger una ruta en el frontend no basta para autorizar una operación sobre la base de datos.
-
-
-
-## Despliegue
-
-La aplicación genera archivos estáticos en `dist/`, que pueden publicarse en un hosting compatible con sitios frontend, como Netlify, Vercel o Cloudflare Pages.
-
-1. Configura Supabase y TMDb, y verifica que el código utilice los valores correctos. Para configurar credenciales por entorno, primero implementa la lectura de las variables de la sección [Variables VITE](#variables-vite).
-2. Ejecuta localmente `npm ci` y `npm run build`.
-3. Configura el proveedor de hosting para instalar con `npm ci` y ejecutar `npm run build`.
-4. Establece `dist` como directorio de publicación.
-5. Si el proveedor requiere variables de compilación, define allí las variables `VITE_*` necesarias. Recuerda que aparecerán en el bundle del navegador.
-6. Configura el hosting para redirigir las rutas de la SPA a `index.html`; de lo contrario, una recarga directa en rutas internas como `/peliculas` podría devolver un error 404.
-7. En Supabase, agrega el dominio de producción a las URL permitidas de autenticación y revisa las políticas RLS.
-
-No hay actualmente una configuración de despliegue automatizado con GitHub Actions en este repositorio. Para automatizarlo, crea un workflow que instale dependencias, compile el proyecto y publique `dist/` en el proveedor elegido.
-
-
-### Servicios y recursos de terceros
-
-- [The Movie Database (TMDb)](https://www.themoviedb.org/) — información y recursos de películas.
-- [Supabase](https://supabase.com/) — autenticación y backend de datos.
-- [Unsplash](https://unsplash.com/) — imágenes utilizadas como fondos, cuando corresponda.
+El pipeline actual no ejecuta pruebas unitarias: el proyecto no declara un comando de pruebas en `package.json`.

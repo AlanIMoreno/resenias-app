@@ -180,13 +180,20 @@ async function generar() {
 
 .resultado-ia {
   white-space: pre-wrap;
-  line-height: 1.8;
-  font-size: 1.05rem;
+  line-height: 2;
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
 }
 
-.recomendaciones-titulo {
-  text-align: center;
-  margin-bottom: 1rem;
+.ia-card {
+  border-top: 5px solid #1976d2;
+  background: linear-gradient(
+    180deg,
+    #fafafa 0%,
+    #ffffff 100%
+  );
 }
+
 
 </style>
