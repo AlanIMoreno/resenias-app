@@ -34,8 +34,7 @@ onMounted(async () => {
       .single()
 
   authStore.setProfile(profile)
-  console.log('PROFILE APP', profile)
-  console.log('ROLE STORE', authStore.role)
+
 })
 
 async function logout() {

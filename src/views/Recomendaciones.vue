@@ -98,11 +98,34 @@ async function generar() {
     <v-alert v-if="errorMsg" type="warning" class="mt-4">
       {{ errorMsg }}
     </v-alert>
+<v-card
+  v-if="resultado"
+  class="mt-6 pa-6"
+  elevation="4"
+>
 
-    <v-card v-if="resultado" class="mt-6 pa-4">
-      <pre style="white-space: pre-wrap; font-family: inherit;">{{ resultado }}</pre>
-    </v-card>
 
+<v-card
+  v-if="resultado"
+  class="mt-6 pa-6"
+  elevation="6"
+  rounded="lg"
+>
+  <div class="d-flex align-center mb-4">
+    <span class="text-h5">🤖</span>
+    <span class="text-h5 ml-2">
+      Análisis IA
+    </span>
+  </div>
+
+  <v-divider class="mb-4" />
+
+  <div class="resultado-ia">
+    {{ resultado }}
+  </div>
+</v-card>
+
+</v-card>
    <div
   v-if="recomendaciones.length"
   class="mt-6"
@@ -149,3 +172,21 @@ async function generar() {
 </div>
   </v-container>
 </template>
+<style scoped>
+
+.ia-card {
+  border-top: 5px solid #1976d2;
+}
+
+.resultado-ia {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.recomendaciones-titulo {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+</style>

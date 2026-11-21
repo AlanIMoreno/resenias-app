@@ -5,20 +5,32 @@ export function useGemini() {
 
   async function analizarGustos(peliculas) {
 
-    const prompt = `
+const prompt = `
 Analiza los gustos cinematográficos del usuario.
 
 Películas mejor valoradas:
 
 ${peliculas.join('\n')}
 
-Responde en español.
+Responde únicamente en español.
 
-Indica:
+Máximo 120 palabras.
 
-1. Qué géneros parecen gustarle.
-2. Qué características tienen esas películas.
-3. Recomienda exactamente 3 películas.
+Formato obligatorio:
+
+🎭 Géneros favoritos:
+- género 1
+- género 2
+- género 3
+
+🎬 Recomendaciones:
+- película 1
+- película 2
+- película 3
+Inicia con una breve introduccion de no mas de 4 lineas analizando los gustos del usuario. 
+No expliques cada película.
+No agregues introducciones largas.
+Sé breve y directo.
 `
 
 const controller = new AbortController()
