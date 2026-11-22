@@ -1,11 +1,33 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { Bar } from 'vue-chartjs'
+
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+)
 import { supabase } from '../../lib/supabase'
 
 const totalUsuarios = ref(0)
 const totalPeliculas = ref(0)
 const totalResenias = ref(0)
 const totalAdmins = ref(0)
+const peliculasMasReseniadas = ref(null)
+const peliculasMejorValoradas = ref(null)
 
 async function cargarIndicadores() {
 
@@ -55,9 +77,117 @@ async function cargarIndicadores() {
     admins || 0
 
 }
+async function cargarGraficos() {
 
+  const { data } = await supabase
+    .from('reseñas')
+    .select(`
+      rating,
+      peliculas (
+        titulo
+      )
+    `)
+
+  if (!data) return
+
+  const conteo = {}
+  const ratings = {}
+
+  data.forEach(r => {
+
+    const titulo =
+      r.peliculas?.titulo
+
+    if (!titulo) return
+
+    conteo[titulo] =
+      (conteo[titulo] || 0) + 1
+
+    if (!ratings[titulo]) {
+      ratings[titulo] = []
+    }
+
+    ratings[titulo].push(r.rating)
+
+  })
+
+  const topResenias =
+    Object.entries(conteo)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+
+  peliculasMasReseniadas.value = {
+
+    labels:
+      topResenias.map(
+        p => p[0]
+      ),
+
+    datasets: [
+      {
+        label:
+          'Cantidad de reseñas',
+
+        data:
+          topResenias.map(
+            p => p[1]
+          ),
+
+        backgroundColor:
+          '#1976D2'
+      }
+    ]
+
+  }
+
+  const promedios =
+    Object.entries(ratings)
+      .map(([titulo, notas]) => ({
+        titulo,
+        promedio:
+          notas.reduce(
+            (a, b) => a + b,
+            0
+          ) / notas.length
+      }))
+      .sort(
+        (a, b) =>
+          b.promedio - a.promedio
+      )
+      .slice(0, 5)
+
+  peliculasMejorValoradas.value = {
+
+    labels:
+      promedios.map(
+        p => p.titulo
+      ),
+
+    datasets: [
+      {
+        label:
+          'Promedio',
+
+        data:
+          promedios.map(
+            p =>
+              p.promedio.toFixed(2)
+          ),
+
+        backgroundColor:
+          '#FFC107'
+      }
+    ]
+
+  }
+
+}
 onMounted(() => {
+
   cargarIndicadores()
+
+  cargarGraficos()
+
 })
 </script>
 <template>
@@ -187,7 +317,52 @@ onMounted(() => {
       </v-col>
 
     </v-row>
+<v-row class="mt-8">
 
+  <v-col cols="12">
+
+    <v-card
+      elevation="6"
+      class="pa-4"
+    >
+
+      <h3 class="mb-4">
+        🎬 Películas más reseñadas
+      </h3>
+
+      <Bar
+        v-if="peliculasMasReseniadas"
+        :data="peliculasMasReseniadas"
+      />
+
+    </v-card>
+
+  </v-col>
+
+  <v-col
+    cols="12"
+    class="mt-4"
+  >
+
+    <v-card
+      elevation="6"
+      class="pa-4"
+    >
+
+      <h3 class="mb-4">
+        ⭐ Mejor valoradas
+      </h3>
+
+      <Bar
+        v-if="peliculasMejorValoradas"
+        :data="peliculasMejorValoradas"
+      />
+
+    </v-card>
+
+  </v-col>
+
+</v-row>
   </v-container>
 
 </template>
