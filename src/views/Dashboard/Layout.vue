@@ -1,26 +1,23 @@
-
 <template>
-  <div>
-<v-toolbar
-  v-if="authStore.role === 'admin'"
-  density="comfortable"
-  color="indigo-darken-2"
-  elevation="6"
->
-
-<v-toolbar-title class="pl-2 text-h6">
-
-  🛡️ Panel de Administración
-
-</v-toolbar-title>
+  <div class="dashboard-wrapper">
+    <v-toolbar
+      v-if="authStore.role === 'admin'"
+      density="comfortable"
+      color="indigo-darken-2"
+      elevation="6"
+    >
+      <v-toolbar-title class="pl-2 text-h6">
+        🛡️ Panel de Administración
+      </v-toolbar-title>
 
       <v-spacer />
-<v-tabs
-  v-model="tabs"
-  color="white"
-  slider-color="amber"
-  align-tabs="center"
->
+
+      <v-tabs
+        v-model="tabs"
+        color="white"
+        slider-color="amber"
+        align-tabs="center"
+      >
         <v-tab
           v-for="tabsItem in tabsItems"
           :key="tabsItem.id"
@@ -31,15 +28,15 @@
           </span>
         </v-tab>
       </v-tabs>
-<v-chip
-  class="mr-2"
-  color="white"
-  size="small"
->
 
-  {{ authStore.user?.email }}
+      <v-chip
+        class="mr-2"
+        color="white"
+        size="small"
+      >
+        {{ authStore.user?.email }}
+      </v-chip>
 
-</v-chip>
       <v-btn
         icon
         variant="text"
@@ -61,9 +58,13 @@
       </v-btn>
     </v-toolbar>
 
-    <v-container>
-      <v-row>
-        <v-col cols="12" md="8" offset-md="2">
+    <v-container class="py-8">
+      <v-row justify="center">
+        <v-col
+          cols="12"
+          md="10"
+          lg="9"
+        >
           <router-view v-slot="{ Component }">
             <v-slide-y-transition mode="out-in">
               <component :is="Component" />
@@ -74,6 +75,7 @@
     </v-container>
   </div>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -125,10 +127,30 @@ const tabsItems = [
   }
 ]
 </script>
+
 <style scoped>
+.dashboard-wrapper {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.14), transparent 45%),
+    linear-gradient(180deg, #263347 0%, #1C2738 100%);
+  color: #F8FAFC;
+}
 
 .v-toolbar {
   border-radius: 0 0 12px 12px;
 }
 
+.dashboard-wrapper :deep(.v-card) {
+  background: rgba(30, 41, 59, 0.88) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #F8FAFC !important;
+}
+
+.dashboard-wrapper :deep(.v-table) {
+  background: transparent !important;
+  color: #F8FAFC !important;
+}
 </style>
