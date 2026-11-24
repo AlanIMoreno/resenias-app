@@ -66,12 +66,12 @@ async function ingresar() {
           md="6"
           lg="4"
         >
- <v-card
-  elevation="16"
-  class="pa-8 login-card"
->
+          <v-card
+            elevation="16"
+            class="pa-8 login-card"
+          >
             <div class="text-center mb-6">
-              <h1 class="text-h4 mb-2">
+              <h1 class="text-h4 mb-2 font-weight-bold">
                 🔐 Iniciar sesión
               </h1>
 
@@ -83,15 +83,14 @@ async function ingresar() {
             <v-text-field
               v-model="email"
               label="Correo electrónico"
-              prepend-inner-icon="mdi-email"
               variant="outlined"
+              class="mb-2"
             />
 
             <v-text-field
               v-model="password"
               label="Contraseña"
               type="password"
-              prepend-inner-icon="mdi-lock"
               variant="outlined"
               @keyup.enter="ingresar"
             />
@@ -100,14 +99,14 @@ async function ingresar() {
               block
               color="primary"
               size="large"
-              class="mt-2"
+              class="mt-2 font-weight-bold"
               @click="ingresar"
             >
               Ingresar
             </v-btn>
 
             <div class="text-center mt-6">
-              <span>
+              <span class="text-medium-emphasis">
                 ¿No tienes cuenta?
               </span>
 
@@ -115,7 +114,7 @@ async function ingresar() {
 
               <v-btn
                 variant="text"
-                color="success"
+                color="primary"
                 to="/register"
               >
                 Registrarse
@@ -132,7 +131,7 @@ async function ingresar() {
 .login-wrapper {
   min-height: 90vh;
   background-image: 
-    linear-gradient(rgba(18, 18, 24, 0.82), rgba(18, 18, 24, 0.94)),
+    linear-gradient(rgba(11, 14, 20, 0.82), rgba(11, 14, 20, 0.94)),
     url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=80');
   background-size: cover;
   background-position: center;
@@ -143,12 +142,10 @@ async function ingresar() {
   min-height: 90vh;
 }
 
-.auth-card {
-  background-color: rgba(28, 28, 36, 0.85) !important;
+.login-card {
+  background: rgba(20, 25, 35, 0.85) !important;
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}.login-card {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F8FAFC !important;
 }
 </style>

@@ -82,10 +82,10 @@ async function registrar() {
           md="6"
           lg="4"
         >
-   <v-card
-  elevation="16"
-  class="pa-8 register-card"
->
+          <v-card
+            elevation="16"
+            class="pa-8 register-card"
+          >
             <div class="text-center mb-6">
               <h1 class="text-h4 mb-2 font-weight-bold">
                 📝 Crear cuenta
@@ -100,32 +100,31 @@ async function registrar() {
               v-model="nombre"
               label="Nombre de usuario"
               type="text"
-              prepend-inner-icon="mdi-account"
               variant="outlined"
+              class="mb-2"
             />
 
             <v-text-field
               v-model="email"
               label="Correo electrónico"
               type="email"
-              prepend-inner-icon="mdi-email"
               variant="outlined"
+              class="mb-2"
             />
 
             <v-text-field
               v-model="password"
               label="Contraseña"
               type="password"
-              prepend-inner-icon="mdi-lock"
               variant="outlined"
               @keyup.enter="registrar"
             />
 
             <v-btn
               block
-              color="success"
+              color="primary"
               size="large"
-              class="mt-2"
+              class="mt-2 font-weight-bold"
               @click="registrar"
             >
               Registrarse
@@ -157,7 +156,7 @@ async function registrar() {
 .register-wrapper {
   min-height: 90vh;
   background-image: 
-    linear-gradient(rgba(18, 18, 24, 0.82), rgba(18, 18, 24, 0.94)),
+    linear-gradient(rgba(11, 14, 20, 0.82), rgba(11, 14, 20, 0.94)),
     url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1920&q=80');
   background-size: cover;
   background-position: center;
@@ -168,13 +167,10 @@ async function registrar() {
   min-height: 90vh;
 }
 
-.auth-card {
-  background-color: rgba(28, 28, 36, 0.85) !important;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
 .register-card {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(8px);
+  background: rgba(20, 25, 35, 0.85) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F8FAFC !important;
 }
 </style>

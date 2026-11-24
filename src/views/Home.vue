@@ -28,9 +28,7 @@ function irMisPeliculas() {
 </script>
 
 <template>
-
   <div class="hero">
-
     <video
       autoplay
       muted
@@ -45,23 +43,18 @@ function irMisPeliculas() {
     </video>
 
     <div class="overlay">
-
       <v-container fluid>
-
         <v-row
           justify="center"
           align="center"
           class="fill-height"
         >
-
           <v-col
             cols="12"
             md="8"
             lg="6"
           >
-
             <div class="text-center">
-
               <h1 class="titulo">
                 🎬 Reseñas de Películas
               </h1>
@@ -75,7 +68,6 @@ function irMisPeliculas() {
                 v-if="!estaLogueado"
                 class="botones"
               >
-
                 <v-btn
                   color="primary"
                   size="large"
@@ -91,14 +83,12 @@ function irMisPeliculas() {
                 >
                   Registrarse
                 </v-btn>
-
               </div>
 
               <div
                 v-else
                 class="botones"
               >
-
                 <v-btn
                   color="primary"
                   size="large"
@@ -114,26 +104,20 @@ function irMisPeliculas() {
                 >
                   Mis películas
                 </v-btn>
-
               </div>
-
             </div>
-
           </v-col>
-
         </v-row>
 
-       <v-row style="margin-top: 140px;">
-
+        <v-row style="margin-top: 140px;">
           <v-col
             cols="12"
             md="4"
           >
-
             <v-card
               elevation="6"
-class="pa-4 text-center"            >
-
+              class="pa-4 text-center"
+            >
               <div class="text-h3">
                 🎬
               </div>
@@ -145,21 +129,17 @@ class="pa-4 text-center"            >
               <div class="text-medium-emphasis">
                 Busca y descubre películas.
               </div>
-
             </v-card>
-
           </v-col>
 
           <v-col
             cols="12"
             md="4"
           >
-
             <v-card
               elevation="6"
               class="pa-4 text-center"
             >
-
               <div class="text-h3">
                 ⭐
               </div>
@@ -171,21 +151,17 @@ class="pa-4 text-center"            >
               <div class="text-medium-emphasis">
                 Comparte tu opinión con otros usuarios.
               </div>
-
             </v-card>
-
           </v-col>
 
           <v-col
             cols="12"
             md="4"
           >
-
             <v-card
               elevation="6"
-            class="pa-4 text-center"
+              class="pa-4 text-center"
             >
-
               <div class="text-h3">
                 👥
               </div>
@@ -197,19 +173,12 @@ class="pa-4 text-center"            >
               <div class="text-medium-emphasis">
                 Consulta valoraciones reales.
               </div>
-
             </v-card>
-
           </v-col>
-
         </v-row>
-
       </v-container>
-
     </div>
-
   </div>
-
 </template>
 
 <style scoped>
@@ -223,23 +192,17 @@ class="pa-4 text-center"            >
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
   height: 100%;
-
   object-fit: cover;
 }
 
 .overlay {
   position: relative;
   z-index: 1;
-
   min-height: 100vh;
-
   background: rgba(0, 0, 0, 0.55);
-
   color: white;
-
   display: flex;
   align-items: center;
 }
@@ -263,10 +226,9 @@ class="pa-4 text-center"            >
 }
 
 .v-card {
-  background: rgba(255, 255, 255, 0.9);
-}
-.v-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(5px);
+  background: rgba(20, 25, 35, 0.85) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F8FAFC !important;
 }
 </style>
